@@ -12,7 +12,7 @@ NEI <- transform(NEI, year = factor(year))
 
 
 ## Total emissions
-totalEmissions <- aggregate(Emissions ~ year,NEI, sum)
+totalEmissions <- aggregate(Emissions ~ year, NEI, sum)
 
 
 
