@@ -18,7 +18,7 @@ require(ggplot2)
 
 ## Total emissions in Baltimore City
 baltimore <- NEI[which(NEI$fips == 24510),]
-baltimoreEmissions <- aggregate(Emissions ~ year + type, baltimore, sum)
+baltimoreEmissions <- aggregate(Emissions ~ type + year, baltimore, sum)
 
 
 
@@ -26,8 +26,8 @@ baltimoreEmissions <- aggregate(Emissions ~ year + type, baltimore, sum)
 png("./plot3.png")
 plot3 <- ggplot(baltimoreEmissions, aes(year, Emissions, color = type))
 plot3 <- plot3 + geom_line() +
-    xlab("Year") +
-    ylab("Total PM2.5 Emissions in Baltimore(tons)") +
+    xlab("year") +
+    ylab(expression('Total PM'[2.5]*" Emissions")) +
     ggtitle("Total PM2.5 Emissions in Baltimore from 1999 to 2008")
 print(plot3)
 dev.off()
