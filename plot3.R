@@ -5,29 +5,24 @@ if(!exists("NEI")){
 if(!exists("SCC")){
     SCC <- readRDS("./data/Source_Classification_Code.rds")
 }
-## Transform
-NEI <- transform(NEI, SCC = factor(SCC))
-NEI <- transform(NEI, year = factor(year))
-NEI <- transform(NEI, type = factor(type))
 
 
 
-require(ggplot2)
+library(ggplot2)
 
 
 
 ## Total emissions in Baltimore City
 baltimore <- NEI[which(NEI$fips == 24510),]
-baltimoreEmissions <- aggregate(Emissions ~ type + year, baltimore, sum)
+baltimore$year <- factor(baltimore$year, levels=c('1999', '2002', '2005', '2008'))
 
 
 
 ## Plotting
-png("./plot3.png")
-plot3 <- ggplot(baltimoreEmissions, aes(year, Emissions, color = type))
-plot3 <- plot3 + geom_line() +
-    xlab("year") +
-    ylab(expression('Total PM'[2.5]*" Emissions")) +
-    ggtitle("Total PM2.5 Emissions in Baltimore from 1999 to 2008")
-print(plot3)
+png("plot3.png", width=800, height=500, units='px')
+ggplot(data=baltimore, aes(x=year, y=log(Emissions))) + facet_grid(. ~ type) + guides(fill=F) +
+    geom_boxplot(aes(fill = type)) + stat_boxplot(geom ='errorbar') +
+    ylab('Log of PM2.5 Emissions in Baltimore(tons)') + xlab('Year') + 
+    ggtitle('Total PM2.5 Emissions in Baltimore from 1999 to 2008') +
+    geom_jitter(alpha=0.10)
 dev.off()
