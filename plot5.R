@@ -17,7 +17,7 @@ baltimore.aggregate <- aggregate(Emissions ~ year, baltimore.onroad, sum)
 
 
 
-png("plot5.png", width=1000, height=600)
+png("./plot5.png", width=1000, height=600)
 g <- ggplot(baltimore.aggregate, aes(factor(year), Emissions))
 g <- g + geom_bar(stat="identity") +
     xlab("year") +
