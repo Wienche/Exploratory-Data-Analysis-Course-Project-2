@@ -1,4 +1,4 @@
-## This first line will likely take a few seconds. Be patient!
+## Loadig the data
 if(!exists("NEI")){
     NEI <- readRDS("./data/summarySCC_PM25.rds")
 }
@@ -10,20 +10,17 @@ if(!exists("NEISCC")){
     NEISCC <- merge(NEI, SCC, by="SCC")
 }
 
+## Subset rows that contain coal
+ContainsCoal <- grepl("coal", NEISCC$Short.Name, ignore.case = TRUE)
+CoalOnly <- NEISCC[ContainsCoal, ]
+SumCoalEmissions <- aggregate(Emissions ~ year, CoalOnly, sum)
 
-require(ggplot2)
+## Load library
+library(ggplot2)
 
-
-
-# fetch all NEIxSCC records with Short.Name (SCC) Coal
-coalMatches <- grepl("coal", NEISCC$Short.Name, ignore.case = TRUE)
-coal <- NEISCC[coalMatches, ]
-coal_Emissions <- aggregate(Emissions ~ year, coal, sum)
-
-
-
-png("./plot4.png")
-g <- ggplot(coal_Emissions, aes(factor(year), Emissions))
+## Make graph
+png("Plot4.png",width=480,height=480)
+g <- ggplot(SumCoalEmissions, aes(factor(year), Emissions))
 g <- g + geom_bar(stat="identity") +
     xlab("year") +
     ylab(expression('Total PM'[2.5]*" Emissions")) +

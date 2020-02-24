@@ -1,4 +1,4 @@
-## This first line will likely take a few seconds. Be patient!
+## Loadig the data
 if(!exists("NEI")){
     NEI <- readRDS("./data/summarySCC_PM25.rds")
 }
@@ -6,19 +6,17 @@ if(!exists("SCC")){
     SCC <- readRDS("./data/Source_Classification_Code.rds")
 }
 
+## Subset Baltimore Onroad
+NEI_Baltimore_Onroad <- NEI[NEI$fips == "24510" & NEI$type == "ON-ROAD",  ]
 
-require(ggplot2)
+SumBaltimoreOnroad <- aggregate(Emissions ~ year, NEI_Baltimore_Onroad, sum)
 
+## Load library
+library(ggplot2)
 
-
-baltimore.onroad <- NEI[NEI$fips == "24510" & NEI$type == "ON-ROAD",  ]
-
-baltimore.aggregate <- aggregate(Emissions ~ year, baltimore.onroad, sum)
-
-
-
-png("./plot5.png", width=1000, height=600)
-g <- ggplot(baltimore.aggregate, aes(factor(year), Emissions))
+## Make graph
+png("Plot5.png",width=480,height=480)
+g <- ggplot(SumBaltimoreOnroad, aes(factor(year), Emissions))
 g <- g + geom_bar(stat="identity") +
     xlab("year") +
     ylab(expression('Total PM'[2.5]*" Emissions")) +
